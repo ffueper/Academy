@@ -27,8 +27,11 @@
 		<h1
 			class="text-secondary border border-secondary border-top-0 border-left-0 border-right-0"
 			th:text="${titulo}"></h1>
-			
-			<a th:href="@{/formAlumno}">ALTA DE ALUMNO</a>
+
+		<p>
+			<a th:href="@{/formAlumno}" class="btn btn-success btn-xs"
+				th:text="'ALTA DE ALUMNO'"></a>
+		</p>
 
 		<table class="table table-striped table-bordered">
 			<thead class="thead-inverse">
@@ -38,7 +41,7 @@
 					<th>nombre</th>
 					<th>apellido</th>
 					<th>email</th>
-					<th>fecha</th>
+					<th>fecha de nacimiento</th>
 					<th>editar</th>
 					<th>eliminar</th>
 				</tr>
@@ -49,7 +52,7 @@
 					<td th:text="${alumno.nombre}"></td>
 					<td th:text="${alumno.apellidos}"></td>
 					<td th:text="${alumno.email}"></td>
-					<td th:text="${alumno.createAt}"></td>
+					<td th:text="${alumno.fechaNac}"></td>
 					<td><a class="btn btn-primary btn-xs"
 						th:href="@{/formAlumno/} + ${alumno.id}" th:text="'editar'"></a></td>
 					<td><a class="btn btn-danger btn-xs"

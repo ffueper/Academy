@@ -12,6 +12,11 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name="alumnos")
@@ -23,9 +28,21 @@ public class Alumno implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotEmpty
 	private String nombre;
+	
+	@NotEmpty
 	private String apellidos;
+	
+	@NotEmpty
+	@Email
 	private String email;
+	
+	@NotNull
+	@Column(name = "fecha_nac")
+	@Temporal(TemporalType.DATE) //Le asigno tipo Date
+	@DateTimeFormat(pattern = "yyyy-MM-dd") //Le asigno el formato
+	private Date fechaNac;
 	
 	@Column(name = "create_at")
 	@Temporal(TemporalType.DATE)
@@ -33,6 +50,7 @@ public class Alumno implements Serializable{
 	
 	@PrePersist
 	public void prePersist() {
+		//Para coger la fecha actual
 		createAt = new Date();
 	}
 	
@@ -59,6 +77,12 @@ public class Alumno implements Serializable{
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public Date getFechaNac() {
+		return fechaNac;
+	}
+	public void setFechaNac(Date fechaNac) {
+		this.fechaNac = fechaNac;
 	}
 	public Date getCreateAt() {
 		return createAt;
