@@ -1,6 +1,7 @@
 package fernandofuentesperez.academia.app.models.entities;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -29,24 +30,26 @@ public class Alumno implements Serializable{
 	private Long id;
 	
 	@NotEmpty
-	private String nombre;
+	private String name;
 	
 	@NotEmpty
-	private String apellidos;
+	private String surname;
 	
 	@NotEmpty
 	@Email
 	private String email;
 	
 	@NotNull
-	@Column(name = "fecha_nac")
+	@Column(name = "birth_date")
 	@Temporal(TemporalType.DATE) //Le asigno tipo Date
 	@DateTimeFormat(pattern = "yyyy-MM-dd") //Le asigno el formato
-	private Date fechaNac;
+	private Date birthDate;
 	
 	@Column(name = "create_at")
 	@Temporal(TemporalType.DATE)
 	private Date createAt;
+	
+	private String photo;
 	
 	@PrePersist
 	public void prePersist() {
@@ -60,17 +63,17 @@ public class Alumno implements Serializable{
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getNombre() {
-		return nombre;
+	public String getName() {
+		return name;
 	}
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void setName(String nombre) {
+		this.name = nombre;
 	}
-	public String getApellidos() {
-		return apellidos;
+	public String getSurname() {
+		return surname;
 	}
-	public void setApellidos(String apellidos) {
-		this.apellidos = apellidos;
+	public void setSurname(String apellidos) {
+		this.surname = apellidos;
 	}
 	public String getEmail() {
 		return email;
@@ -78,11 +81,15 @@ public class Alumno implements Serializable{
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Date getFechaNac() {
-		return fechaNac;
+	public Date getBirthDate() {
+		return birthDate;
 	}
-	public void setFechaNac(Date fechaNac) {
-		this.fechaNac = fechaNac;
+	public void setBirthDate(Date birthDate) {
+		/*Calendar c = Calendar.getInstance();
+		c.setTime(birthDate);
+		c.add(Calendar.DAY_OF_MONTH, +1);
+		this.birthDate = c.getTime(); */
+		this.birthDate = birthDate;
 	}
 	public Date getCreateAt() {
 		return createAt;
@@ -90,7 +97,14 @@ public class Alumno implements Serializable{
 	public void setCreateAt(Date createAt) {
 		this.createAt = createAt;
 	}
-	
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
 	
 	
 }

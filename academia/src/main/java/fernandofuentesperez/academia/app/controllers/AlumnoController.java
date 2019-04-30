@@ -1,5 +1,9 @@
 package fernandofuentesperez.academia.app.controllers;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -11,12 +15,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import fernandofuentesperez.academia.app.models.entities.Alumno;
@@ -38,6 +44,20 @@ public class AlumnoController {
 		return "alumnos";
 	}
 	*/
+	
+	@GetMapping(value = "/profile/{id}")
+	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+
+		Alumno alumno = alumnoService.findOne(id);
+		if (alumno == null) {
+			flash.addFlashAttribute("error", "El alumno no existe en la base de datos");
+			return "redirect:/alumnos";
+		}
+
+		model.put("alumno", alumno);
+		model.put("titulo", "Perfil del alumno: " + alumno.getName());
+		return "profile";
+	}
 	
 	//Envía un Page con 5 alumnos usando PageRequest
 	@RequestMapping(value="/alumnos", method=RequestMethod.GET)
@@ -63,18 +83,39 @@ public class AlumnoController {
 		Alumno alumno = new Alumno();
 		
 		model.put("alumno", alumno);
-		model.put("titulo", "Formulario de Alumno");
+		model.put("titulo", "Crear Alumno");
 		
 		return "formAlumno";
 	}
 	
 	//Guarda un alumno en el sistema
 	@RequestMapping(value="/formAlumno", method=RequestMethod.POST)
-	public String guardar(@Valid Alumno alumno, BindingResult result, Model model, RedirectAttributes flash, SessionStatus status) {
+	public String guardar(@Valid Alumno alumno, BindingResult result, Model model, 
+			@RequestParam("file") MultipartFile photo, RedirectAttributes flash, SessionStatus status) {
+		
 		if(result.hasErrors()) {
 			model.addAttribute("titulo", "Formulario de Alumno");
 			return "formAlumno";
 		}
+		
+		if(!photo.isEmpty()) {
+			
+			String rootPath = "C://tmp/uploads";
+			try {
+				
+				byte[] bytes = photo.getBytes(); //Obtenemos los bytes de la imagen
+				Path completePath = Paths.get(rootPath + "//" + photo.getOriginalFilename());
+				Files.write(completePath, bytes); //Agrega la imagen en el directorio rootPath
+				flash.addFlashAttribute("info", "Ha subido correctamente '" + photo.getOriginalFilename() + "'");
+				
+				alumno.setPhoto(photo.getOriginalFilename());
+						
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		String msflash = (alumno.getId() != null) ? "Alumno editado con éxito." : "Alumno creado con éxito.";
 		alumnoService.save(alumno);
 		status.setComplete(); //Elimina el objeto alumno de la sesión

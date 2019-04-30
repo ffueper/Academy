@@ -31,12 +31,12 @@
 					<tbody>
 						<tr th:each="alumno: ${alumnos}">
 							<td th:text="${alumno.id}"></td>
-							<td th:text="${alumno.nombre}"></td>
-							<td th:text="${alumno.apellidos}"></td>
+							<td th:text="${alumno.name}"></td>
+							<td th:text="${alumno.surname}"></td>
 							<td th:text="${alumno.email}"></td>
-							<td th:text="${alumno.fechaNac}"></td>
+							<td th:text="${alumno.birthDate}"></td>
 							<td><a class="btn btn-primary btn-xs"
-								th:href="@{/formAlumno/} + ${alumno.id}" th:text="'ver'"></a></td>
+								th:href="@{/profile/} + ${alumno.id}" th:text="'ver'"></a></td>
 							<td><a class="btn btn-warning btn-xs"
 								th:href="@{/formAlumno/} + ${alumno.id}" th:text="'editar'"></a></td>
 							<td><a class="btn btn-danger btn-xs"

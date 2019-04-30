@@ -15,50 +15,57 @@
 				</ul>
 
 			</div>
-<div class="container py-4">
-			<form th:action="@{/formAlumno}" th:object="${alumno}" method="post" >
+			<div class="container py-4">
+				<form th:action="@{/formAlumno}" th:object="${alumno}" method="post"
+					enctype="multipart/form-data">
 
-				<div class="form-group row">
-					<label class="col-sm-2 col-form-label">Nombre</label>
-					<div class="col-sm-6">
-						<input type="text" th:field="*{nombre}" class="form-control"
-							th:errorclass="'form-contra alert-danger'" /> <small
-							class="form-text text-danger"
-							th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label">Nombre</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{name}" class="form-control"
+								th:errorclass="'form-contra alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
+						</div>
 					</div>
-				</div>
-				<div class="form-group row">
-					<label class="col-sm-2 col-form-label">Apellidos</label>
-					<div class="col-sm-6">
-						<input type="text" th:field="*{apellidos}" class="form-control" />
-						<small class="form-text text-danger"
-							th:if="${#fields.hasErrors('apellidos')}"
-							th:errors="*{apellidos}"></small>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label">Apellidos</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{surname}" class="form-control" />
+							<small class="form-text text-danger"
+								th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></small>
+						</div>
 					</div>
-				</div>
-				<div class="form-group row">
-					<label class="col-sm-2 col-form-label">Email</label>
-					<div class="col-sm-6">
-						<input type="text" th:field="*{email}" class="form-control" /> <small
-							class="form-text text-danger"
-							th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label">Email</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{email}" class="form-control" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+						</div>
 					</div>
-				</div>
-				<div class="form-group row">
-					<label class="col-sm-2 col-form-label">Fecha de nacimiento</label>
-					<div class="col-sm-6">
-						<input type="text" class="form-control" th:field="*{fechaNac}">
-						<small class="form-text text-danger"
-							th:if="${#fields.hasErrors('fechaNac')}" th:errors="*{fechaNac}"></small>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label">Fecha nacimiento</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" th:field="*{birthDate}">
+							<small class="form-text text-danger"
+								th:if="${#fields.hasErrors('birthDate')}"
+								th:errors="*{birthDate}"></small>
+						</div>
 					</div>
-				</div>
-				<div class="form-group row">
-					<div class="col-sm-6">
-						<input type="submit" value="Guardar Alumno"
-							class="btn btn-primary" />
+					<div class="form-group row">
+						<label for="file" class="col-sm-2 col-form-label">Foto</label>
+						<div class="col-sm-6">
+							<input type="file" name="file" class="form-control" />
+						</div>
 					</div>
-				</div>
-			</form>
+					<div class="form-group row">
+						<div class="col-sm-6">
+							<input type="submit" th:value="${titulo}"
+								class="btn btn-secondary" />
+						</div>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
