@@ -34,7 +34,7 @@
 							<td th:text="${alumno.name}"></td>
 							<td th:text="${alumno.surname}"></td>
 							<td th:text="${alumno.email}"></td>
-							<td th:text="${alumno.birthDate}"></td>
+							<td th:text="${#dates.format(alumno.birthDate, 'dd/MM/yyyy')}"></td>
 							<td><a class="btn btn-primary btn-xs"
 								th:href="@{/profile/} + ${alumno.id}" th:text="'ver'"></a></td>
 							<td><a class="btn btn-warning btn-xs"

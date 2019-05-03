@@ -19,7 +19,7 @@
 					<li class="list-group-item active" th:text="${alumno.name}"></li>
 					<li class="list-group-item" th:text="${alumno.surname}"></li>
 					<li class="list-group-item" th:text="${alumno.email}"></li>
-					<li class="list-group-item" th:text="${alumno.birthDate}"></li>
+					<li class="list-group-item" th:text="${#dates.format(alumno.birthDate, 'dd/MM/yyyy')}"></li>
 				</ul>
 
 			</div>
