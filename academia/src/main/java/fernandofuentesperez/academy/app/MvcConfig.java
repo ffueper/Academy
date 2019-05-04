@@ -1,4 +1,4 @@
-package fernandofuentesperez.academia.app;
+package fernandofuentesperez.academy.app;
 
 //import java.nio.file.Paths;
 

@@ -1,4 +1,4 @@
-package fernandofuentesperez.academia.app;
+package fernandofuentesperez.academy.app;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AcademiaApplicationTests {
+public class AcademyApplicationTests {
 
 	@Test
 	public void contextLoads() {

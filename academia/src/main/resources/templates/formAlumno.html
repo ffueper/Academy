@@ -8,7 +8,7 @@
 		<div class="card bg-light">
 			<h4 class="card-header" th:text="${titulo}"></h4>
 
-			<div th:object="${alumno}" th:remove="tag">
+			<div th:object="${student}" th:remove="tag">
 				<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger"
 					role="alert">
 					<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
@@ -16,7 +16,7 @@
 
 			</div>
 			<div class="container py-4">
-				<form th:action="@{/formAlumno}" th:object="${alumno}" method="post"
+				<form th:action="@{/formAlumno}" th:object="${student}" method="post"
 					enctype="multipart/form-data">
 
 					<div class="form-group row">

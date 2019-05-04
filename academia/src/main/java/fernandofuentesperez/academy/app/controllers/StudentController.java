@@ -1,4 +1,4 @@
-package fernandofuentesperez.academia.app.controllers;
+package fernandofuentesperez.academy.app.controllers;
 
 
 import java.io.IOException;
@@ -28,17 +28,17 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import fernandofuentesperez.academia.app.models.entities.Alumno;
-import fernandofuentesperez.academia.app.models.services.AlumnoService;
-import fernandofuentesperez.academia.app.models.services.UploadFileService;
-import fernandofuentesperez.academia.app.util.paginator.PageRender;
+import fernandofuentesperez.academy.app.models.entities.Student;
+import fernandofuentesperez.academy.app.models.services.StudentService;
+import fernandofuentesperez.academy.app.models.services.UploadFileService;
+import fernandofuentesperez.academy.app.util.paginator.PageRender;
 
 @Controller
-@SessionAttributes("alumno")
-public class AlumnoController {
+@SessionAttributes("student")
+public class StudentController {
 
 	@Autowired
-	private AlumnoService alumnoService;
+	private StudentService studentService;
 	
 	@Autowired
 	private UploadFileService uploadFileService;
@@ -64,14 +64,14 @@ public class AlumnoController {
 	@GetMapping(value = "/profile/{id}")
 	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 
-		Alumno alumno = alumnoService.findOne(id);
-		if (alumno == null) {
+		Student student = studentService.findOne(id);
+		if (student == null) {
 			flash.addFlashAttribute("error", "El alumno no existe en la base de datos");
 			return "redirect:/alumnos";
 		}
 
-		model.put("alumno", alumno);
-		model.put("titulo", "Perfil del alumno: " + alumno.getName());
+		model.put("student", student);
+		model.put("titulo", "Perfil del alumno: " + student.getName());
 		return "profile";
 	}
 
@@ -81,11 +81,11 @@ public class AlumnoController {
 
 		Pageable pageRequest = PageRequest.of(page, 4); // Spring Boot 2
 
-		Page<Alumno> alumnos = alumnoService.findAll(pageRequest);
+		Page<Student> students = studentService.findAll(pageRequest);
 
-		PageRender<Alumno> pageRender = new PageRender<Alumno>("/alumnos", alumnos);
+		PageRender<Student> pageRender = new PageRender<Student>("/alumnos", students);
 		model.addAttribute("titulo", "Listado de alumnos");
-		model.addAttribute("alumnos", alumnos);
+		model.addAttribute("students", students);
 		model.addAttribute("page", pageRender);
 		return "alumnos";
 
@@ -95,10 +95,10 @@ public class AlumnoController {
 	@RequestMapping(value = "/formAlumno", method = RequestMethod.GET)
 	public String crear(Map<String, Object> model) {
 
-		Alumno alumno = new Alumno();
-		alumno.setPhoto(""); //Campo photo no puede ser null.
+		Student student = new Student();
+		student.setPhoto(""); //Campo photo no puede ser null.
 
-		model.put("alumno", alumno);
+		model.put("student", student);
 		model.put("titulo", "Crear Alumno");
 
 		return "formAlumno";
@@ -106,7 +106,7 @@ public class AlumnoController {
 
 	// Guarda un alumno en el sistema
 	@RequestMapping(value = "/formAlumno", method = RequestMethod.POST)
-	public String guardar(@Valid Alumno alumno, BindingResult result, Model model,
+	public String guardar(@Valid Student student, BindingResult result, Model model,
 			@RequestParam("file") MultipartFile photo, RedirectAttributes flash, SessionStatus status) {
 
 		if (result.hasErrors()) {
@@ -116,10 +116,10 @@ public class AlumnoController {
 
 		if (!photo.isEmpty()) {
 
-			if (alumno.getId() != null && alumno.getId() > 0 && alumno.getPhoto() != null
-					&& alumno.getPhoto().length() > 0) {
+			if (student.getId() != null && student.getId() > 0 && student.getPhoto() != null
+					&& student.getPhoto().length() > 0) {
 
-				uploadFileService.delete(alumno.getPhoto());
+				uploadFileService.delete(student.getPhoto());
 			}
 
 			String uniqueFileName = null;
@@ -132,14 +132,14 @@ public class AlumnoController {
 
 			flash.addFlashAttribute("info", "Ha subido correctamente '" + uniqueFileName + "'");
 
-			alumno.setPhoto(uniqueFileName);
+			student.setPhoto(uniqueFileName);
 		}
 
 		// Si crea un alumno con foto le meto cadena vacía para que no de error
 		//alumno.setPhoto("");
 
-		String msflash = (alumno.getId() != null) ? "Alumno editado con éxito." : "Alumno creado con éxito.";
-		alumnoService.save(alumno);
+		String msflash = (student.getId() != null) ? "Alumno editado con éxito." : "Alumno creado con éxito.";
+		studentService.save(student);
 		status.setComplete(); // Elimina el objeto alumno de la sesión
 		flash.addFlashAttribute("success", msflash);
 		return "redirect:alumnos";
@@ -148,11 +148,11 @@ public class AlumnoController {
 	// Busca los datos del alumno y los envía al formulario
 	@RequestMapping(value = "/formAlumno/{id}")
 	public String editar(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
-		Alumno alumno = null;
+		Student student = null;
 
 		if (id > 0) {
-			alumno = alumnoService.findOne(id);
-			if (alumno == null) {
+			student = studentService.findOne(id);
+			if (student == null) {
 				flash.addFlashAttribute("error", "El ID del alumno no existe en la BBDD!");
 				return "redirect:/alumnos";
 			}
@@ -161,7 +161,7 @@ public class AlumnoController {
 			return "redirect:/alumnos";
 		}
 
-		model.put("alumno", alumno);
+		model.put("student", student);
 		model.put("titulo", "Editar Alumno");
 
 		return "formAlumno";
@@ -170,13 +170,13 @@ public class AlumnoController {
 	@RequestMapping(value = "/eliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		if (id > 0) {
-			Alumno alumno = alumnoService.findOne(id);
+			Student student = studentService.findOne(id);
 
-			alumnoService.delete(id);
+			studentService.delete(id);
 			flash.addFlashAttribute("success", "Alumno eliminado con éxito.");
 
-			if (uploadFileService.delete(alumno.getPhoto())) {
-				flash.addFlashAttribute("info", "Foto " + alumno.getPhoto() + " eliminada con éxito");
+			if (uploadFileService.delete(student.getPhoto())) {
+				flash.addFlashAttribute("info", "Foto " + student.getPhoto() + " eliminada con éxito");
 			}
 
 		}

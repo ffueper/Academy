@@ -1,4 +1,4 @@
-package fernandofuentesperez.academia.app.models.services;
+package fernandofuentesperez.academy.app.models.services;
 
 import java.io.File;
 import java.io.IOException;

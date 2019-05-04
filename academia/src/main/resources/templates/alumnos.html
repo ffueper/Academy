@@ -29,18 +29,18 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="alumno: ${alumnos}">
-							<td th:text="${alumno.id}"></td>
-							<td th:text="${alumno.name}"></td>
-							<td th:text="${alumno.surname}"></td>
-							<td th:text="${alumno.email}"></td>
-							<td th:text="${#dates.format(alumno.birthDate, 'dd/MM/yyyy')}"></td>
+						<tr th:each="student: ${students}">
+							<td th:text="${student.id}"></td>
+							<td th:text="${student.name}"></td>
+							<td th:text="${student.surname}"></td>
+							<td th:text="${student.email}"></td>
+							<td th:text="${#dates.format(student.birthDate, 'dd/MM/yyyy')}"></td>
 							<td><a class="btn btn-primary btn-xs"
-								th:href="@{/profile/} + ${alumno.id}" th:text="'ver'"></a></td>
+								th:href="@{/profile/} + ${student.id}" th:text="'ver'"></a></td>
 							<td><a class="btn btn-warning btn-xs"
-								th:href="@{/formAlumno/} + ${alumno.id}" th:text="'editar'"></a></td>
+								th:href="@{/formAlumno/} + ${student.id}" th:text="'editar'"></a></td>
 							<td><a class="btn btn-danger btn-xs"
-								th:href="@{/eliminar/} + ${alumno.id}" th:text="'eliminar'"
+								th:href="@{/eliminar/} + ${student.id}" th:text="'eliminar'"
 								onclick="return confirm('¿Quiere eliminar el alumno?');"></a></td>
 						</tr>
 					</tbody>

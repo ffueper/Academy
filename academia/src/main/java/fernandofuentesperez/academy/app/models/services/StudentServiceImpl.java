@@ -1,4 +1,4 @@
-package fernandofuentesperez.academia.app.models.services;
+package fernandofuentesperez.academy.app.models.services;
 
 import java.util.List;
 
@@ -8,37 +8,37 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fernandofuentesperez.academia.app.models.entities.Alumno;
-import fernandofuentesperez.academia.app.models.repository.AlumnoDao;
+import fernandofuentesperez.academy.app.models.entities.Student;
+import fernandofuentesperez.academy.app.models.repository.StudentDAO;
 
 //CLASE SERVICE COMO UNICO PUNTO DE ACCESO A DIFERENTES CLASES DAO
 
 @Service
-public class AlumnoServiceImpl implements AlumnoService {
+public class StudentServiceImpl implements StudentService {
 
 	@Autowired
-	private AlumnoDao alumnoDao;
+	private StudentDAO alumnoDao;
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<Alumno> findAll() {
-		return (List<Alumno>) alumnoDao.findAll();
+	public List<Student> findAll() {
+		return (List<Student>) alumnoDao.findAll();
 	}
 	
 	@Override
-	public Page<Alumno> findAll(Pageable pageable) {
+	public Page<Student> findAll(Pageable pageable) {
 		return alumnoDao.findAll(pageable);
 	}
 
 	@Override
 	@Transactional
-	public void save(Alumno alumno) {
+	public void save(Student alumno) {
 		alumnoDao.save(alumno);
 	}
 
 	@Override
 	@Transactional(readOnly=true)
-	public Alumno findOne(Long id) {
+	public Student findOne(Long id) {
 		return alumnoDao.findById(id).orElse(null);
 	}
 

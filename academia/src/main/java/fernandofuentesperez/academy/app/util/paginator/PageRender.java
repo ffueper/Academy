@@ -1,4 +1,4 @@
-package fernandofuentesperez.academia.app.util.paginator;
+package fernandofuentesperez.academy.app.util.paginator;
 
 import java.util.ArrayList;
 import java.util.List;

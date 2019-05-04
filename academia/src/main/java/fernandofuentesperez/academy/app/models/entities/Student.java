@@ -1,13 +1,15 @@
-package fernandofuentesperez.academia.app.models.entities;
+package fernandofuentesperez.academy.app.models.entities;
 
 import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -19,8 +21,8 @@ import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-@Table(name="alumnos")
-public class Alumno implements Serializable{
+@Table(name="students")
+public class Student implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
@@ -39,62 +41,76 @@ public class Alumno implements Serializable{
 	private String email;
 	
 	@NotNull
-	@Column(name = "birth_date")
+	@Column(name = "date_birth")
 	@Temporal(TemporalType.DATE) //Le asigno tipo Date
 	@DateTimeFormat(pattern = "yyyy-MM-dd") //Le asigno el formato
 	private Date birthDate;
 	
-	@Column(name = "create_at")
 	@Temporal(TemporalType.DATE)
-	private Date createAt;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date created;
 	
 	private String photo;
 	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private Client client;
+	
+	
+	
 	@PrePersist
 	public void prePersist() {
-		//Para coger la fecha actual
-		createAt = new Date();
+		created = new Date();
 	}
 	
+	
+	
+	//GETTERS AND SETTERS
 	public Long getId() {
 		return id;
 	}
+	
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
 	public String getName() {
 		return name;
 	}
+	
 	public void setName(String nombre) {
 		this.name = nombre;
 	}
+	
 	public String getSurname() {
 		return surname;
 	}
+	
 	public void setSurname(String apellidos) {
 		this.surname = apellidos;
 	}
+	
 	public String getEmail() {
 		return email;
 	}
+	
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
 	public Date getBirthDate() {
 		return birthDate;
 	}
+	
 	public void setBirthDate(Date birthDate) {
-		/*Calendar c = Calendar.getInstance();
-		c.setTime(birthDate);
-		c.add(Calendar.DAY_OF_MONTH, +1);
-		this.birthDate = c.getTime(); */
 		this.birthDate = birthDate;
 	}
-	public Date getCreateAt() {
-		return createAt;
+	
+	public Date getCreated() {
+		return created;
 	}
-	public void setCreateAt(Date createAt) {
-		this.createAt = createAt;
+	
+	public void setCreated(Date createAt) {
+		this.created = createAt;
 	}
 
 	public String getPhoto() {
@@ -105,5 +121,12 @@ public class Alumno implements Serializable{
 		this.photo = photo;
 	}
 	
+	public Client getClient() {
+		return client;
+	}
+	
+	public void setClient(Client client) {
+		this.client = client;
+	}
 	
 }
