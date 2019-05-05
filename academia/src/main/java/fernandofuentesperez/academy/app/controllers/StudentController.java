@@ -61,39 +61,39 @@ public class StudentController {
 	}
 
 	// Envía los datos de un alumno al profile.html
-	@GetMapping(value = "/profile/{id}")
-	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+	@GetMapping(value = "/studentProfile/{id}")
+	public String seeStudent(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 
 		Student student = studentService.findOne(id);
 		if (student == null) {
 			flash.addFlashAttribute("error", "El alumno no existe en la base de datos");
-			return "redirect:/alumnos";
+			return "redirect:/studentList";
 		}
 
 		model.put("student", student);
 		model.put("titulo", "Perfil del alumno: " + student.getName());
-		return "profile";
+		return "studentProfile";
 	}
 
 	// Envía un Page con 5 alumnos usando PageRequest
-	@RequestMapping(value = "/alumnos", method = RequestMethod.GET)
-	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+	@RequestMapping(value = "/studentList", method = RequestMethod.GET)
+	public String listStudent(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
 
 		Pageable pageRequest = PageRequest.of(page, 4); // Spring Boot 2
 
 		Page<Student> students = studentService.findAll(pageRequest);
 
-		PageRender<Student> pageRender = new PageRender<Student>("/alumnos", students);
+		PageRender<Student> pageRender = new PageRender<Student>("/studentList", students);
 		model.addAttribute("titulo", "Listado de alumnos");
 		model.addAttribute("students", students);
 		model.addAttribute("page", pageRender);
-		return "alumnos";
+		return "studentList";
 
 	}
 
 	// Envía un alumno sin datos al formulario
-	@RequestMapping(value = "/formAlumno", method = RequestMethod.GET)
-	public String crear(Map<String, Object> model) {
+	@RequestMapping(value = "/studentForm", method = RequestMethod.GET)
+	public String createStudent(Map<String, Object> model) {
 
 		Student student = new Student();
 		student.setPhoto(""); //Campo photo no puede ser null.
@@ -101,17 +101,17 @@ public class StudentController {
 		model.put("student", student);
 		model.put("titulo", "Crear Alumno");
 
-		return "formAlumno";
+		return "studentForm";
 	}
 
 	// Guarda un alumno en el sistema
-	@RequestMapping(value = "/formAlumno", method = RequestMethod.POST)
-	public String guardar(@Valid Student student, BindingResult result, Model model,
+	@RequestMapping(value = "/studentForm", method = RequestMethod.POST)
+	public String saveStudent(@Valid Student student, BindingResult result, Model model,
 			@RequestParam("file") MultipartFile photo, RedirectAttributes flash, SessionStatus status) {
 
 		if (result.hasErrors()) {
 			model.addAttribute("titulo", "Formulario de Alumno");
-			return "formAlumno";
+			return "studentForm";
 		}
 
 		if (!photo.isEmpty()) {
@@ -142,33 +142,33 @@ public class StudentController {
 		studentService.save(student);
 		status.setComplete(); // Elimina el objeto alumno de la sesión
 		flash.addFlashAttribute("success", msflash);
-		return "redirect:alumnos";
+		return "redirect:studentList";
 	}
 
 	// Busca los datos del alumno y los envía al formulario
-	@RequestMapping(value = "/formAlumno/{id}")
-	public String editar(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+	@RequestMapping(value = "/studentForm/{id}")
+	public String editStudent(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 		Student student = null;
 
 		if (id > 0) {
 			student = studentService.findOne(id);
 			if (student == null) {
 				flash.addFlashAttribute("error", "El ID del alumno no existe en la BBDD!");
-				return "redirect:/alumnos";
+				return "redirect:/studentList";
 			}
 		} else {
 			flash.addFlashAttribute("error", "El ID del alumno no puede ser menor que 1");
-			return "redirect:/alumnos";
+			return "redirect:/studentList";
 		}
 
 		model.put("student", student);
 		model.put("titulo", "Editar Alumno");
 
-		return "formAlumno";
+		return "studentForm";
 	}
 
-	@RequestMapping(value = "/eliminar/{id}")
-	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
+	@RequestMapping(value = "/deleteStudent/{id}")
+	public String deleteStudent(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		if (id > 0) {
 			Student student = studentService.findOne(id);
 
@@ -180,7 +180,7 @@ public class StudentController {
 			}
 
 		}
-		return "redirect:/alumnos";
+		return "redirect:/studentList";
 	}
 
 }

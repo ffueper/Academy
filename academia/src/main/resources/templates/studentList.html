@@ -11,7 +11,7 @@
 			<div class="card-body">
 
 				<p>
-					<a th:href="@{/formAlumno}" class="btn btn-success btn-xs"
+					<a th:href="@{/studentForm}" class="btn btn-success btn-xs"
 						th:text="'ALTA DE ALUMNO'"></a>
 				</p>
 				<table class="table table-striped table-bordered">
@@ -36,11 +36,11 @@
 							<td th:text="${student.email}"></td>
 							<td th:text="${#dates.format(student.birthDate, 'dd/MM/yyyy')}"></td>
 							<td><a class="btn btn-primary btn-xs"
-								th:href="@{/profile/} + ${student.id}" th:text="'ver'"></a></td>
+								th:href="@{/studentProfile/} + ${student.id}" th:text="'ver'"></a></td>
 							<td><a class="btn btn-warning btn-xs"
-								th:href="@{/formAlumno/} + ${student.id}" th:text="'editar'"></a></td>
+								th:href="@{/studentForm/} + ${student.id}" th:text="'editar'"></a></td>
 							<td><a class="btn btn-danger btn-xs"
-								th:href="@{/eliminar/} + ${student.id}" th:text="'eliminar'"
+								th:href="@{/deleteStudent/} + ${student.id}" th:text="'eliminar'"
 								onclick="return confirm('¿Quiere eliminar el alumno?');"></a></td>
 						</tr>
 					</tbody>
