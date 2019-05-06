@@ -7,8 +7,9 @@
 
 	<div class="container py-4">
 
-		<div class="card bg-light">
-			<div class="card-header" th:text="${titulo}"></div>
+		<div class="card bg-white">
+			<div class="card-header bg-dark text-white" th:text="${titulo}"></div>
+
 			<div class="card-body">
 
 				<img th:if="${#strings.length(student.photo) > 0}"
@@ -17,18 +18,23 @@
 					th:alt="${student.photo}" />
 
 				<ul class="list-group">
-					<li class="list-group-item active"
-						th:text="${student.name} + ' ' + ${student.surname}"></li>
-					<li class="list-group-item"
-						th:text="'Correo electr&oacute;nico: ' + ${student.email}"></li>
-					<li class="list-group-item"
-						th:text="'Fecha de nacimiento: ' + ${#dates.format(student.birthDate, 'dd/MM/yyyy')}"></li>
-					<li th:if="${not #lists.isEmpty(student.client)}"
-						class="alert alert-info my-4"
-						th:text="'Datos de cliente: ' + ${student.client.name} + ' ' + ${student.client.surname}"></li>
+					<li class="list-group-item shadow p-3 mb-3"><b>Email : </b>
+						<div th:text="${student.email}"></div></li>
+					<li class="list-group-item shadow p-3 mb-3"><b>Fecha de
+							nacimiento : </b>
+						<div th:text="${#dates.format(student.birthDate, 'dd/MM/yyyy')}"></div></li>
+					<li class="list-group-item shadow p-3 mb-3"><b>Datos de
+							cliente : </b>
+						<div class="my-3" th:if="${not #lists.isEmpty(student.client)}">
+							<a class="list-group-item list-group-item-action "
+							th:href="@{/clientProfile/} + ${student.client.id}" 
+							th:text="${student.client.name} + ' ' + ${student.client.surname}"></a>
+						</div></li>
 				</ul>
+				<br>
 
 			</div>
+
 		</div>
 
 	</div>

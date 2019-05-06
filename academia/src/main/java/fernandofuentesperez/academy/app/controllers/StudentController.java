@@ -75,7 +75,7 @@ public class StudentController {
 		}
 
 		model.put("student", student);
-		model.put("titulo", "Perfil del alumno: " + student.getName());
+		model.put("titulo", "Alumno:  " + student.getName() + " " + student.getSurname());
 		return "studentProfile";
 	}
 

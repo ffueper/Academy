@@ -42,7 +42,7 @@ public class ClientController {
 		}
 
 		model.put("client", client);
-		model.put("titulo", "Perfil del cliente: " + client.getName());
+		model.put("titulo", "Cliente :  " + client.getName() + " " + client.getSurname());
 		return "clientProfile";
 	}
 

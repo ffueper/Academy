@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<div class="card-header" th:text="${title}"></div>
+			<div class="card-body">
+
+				<h4 class="card-title">
+					<a class="btn btn-primary btn-xs"
+						th:href="@{'/invoice/form/' + ${client.id}}"
+						th:text="'Crear factura'"></a>
+				</h4>
+
+				<div th:if="${#lists.isEmpty(client.invoices)}"
+					class="alert alert-info my-4"
+					th:text="'No hay facturas asignadas para el cliente ' + ${client.name} + ' ' + ${client.surname}"></div>
+
+				<table th:if="${not #lists.isEmpty(client.invoices)}"
+					class="table table-bordered table-striped my-4">
+					<thead class="thead-inverse">
+						<tr>
+							<th>Referencia</th>
+							<th>Descripci&oacute;n</th>
+							<th>Fecha</th>
+							<th>Total</th>
+							<th>Detalle</th>
+							<th>Eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="invoice: ${client.invoices}">
+							<td th:text="${invoice.id}"></td>
+							<td th:text="${invoice.description}"></td>
+							<td th:text="${#dates.format(invoice.created, 'dd/MM/yyyy')}"></td>
+							<td th:text="${invoice.total}"></td>
+							<td><a class="btn btn-primary btn-xs"
+								th:href="@{'/invoice/detail/' + ${invoice.id}}" th:text="'detalle'"></a></td>
+							<td><a class="btn btn-danger btn-xs"
+								th:href="@{'/invoice/deleteInvoice/' + ${invoice.id}}"
+								th:text="'eliminar'"
+								onclick="return confirm('¿Estas seguro que desea eliminar la factura?');"></a></td>
+						</tr>
+					</tbody>
+
+				</table>
+
+			</div>
+		</div>
+
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>
