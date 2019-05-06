@@ -9,54 +9,65 @@
 
 		<div class="card bg-light">
 			<div class="card-header" th:text="${titulo}"></div>
+
 			<div class="card-body">
 
 				<ul class="list-group">
-					<li class="list-group-item active" th:text="${client.name} + ' ' + ${client.surname}"></li>
+					<li class="list-group-item active"
+						th:text="${client.name} + ' ' + ${client.surname}"></li>
 					<li class="list-group-item" th:text="${client.email}"></li>
 					<li class="list-group-item" th:text="${client.phoneNumber}"></li>
 					<li class="list-group-item"
 						th:text="${#dates.format(client.created, 'dd/MM/yyyy')}"></li>
 				</ul>
 
+				<br> <br>
+
 				<div th:if="${#lists.isEmpty(client.students)}"
 					class="alert alert-info my-4"
-					th:text="'No hay alumnos asignados al cliente ' + ${client.name} + ' ' + ${client.surname}"></div>
+					th:text="'No hay alumnos asignados al cliente ' + ${client.name} + ' ' + ${client.surname}">
+				</div>
 
-				<table th:if="${not #lists.isEmpty(client.students)}"
-					class="table table-bordered table-striped my-4">
-					<thead class="thead-inverse">
-						<tr>
-							<th>Id alumno</th>
-							<th>Nombre</th>
-							<th>Apellidos</th>
-							<th>Fecha nacimiento</th>
-							<th>ver</th>
-							<th>eliminar</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="student: ${client.students}">
-							<td th:text="${student.id}"></td>
-							<td th:text="${student.name}"></td>
-							<td th:text="${student.surname}"></td>
-							<td th:text="${student.birthDate}"></td>
-							
-							<td><a class="btn btn-primary btn-xs"
-								th:href="@{'/student/seeStudent/' + ${student.id}}" th:text="'ver'"></a></td>
-							<td><a class="btn btn-danger btn-xs"
-								th:href="@{'/student/deleteStudent/' + ${student.id}}"
-								th:text="'eliminar'"
-								onclick="return confirm('¿Segur@ que desea eliminar el alumno?');"></a></td>
-						</tr>
-					</tbody>
+				<div class="card bg-light">
 
-				</table>
+					<div class="card-header" th:text="'Alumnos del cliente: '"></div>
+					<div class="card-body">
+						<table th:if="${not #lists.isEmpty(client.students)}"
+							class="table table-bordered table-striped py-4 px-4">
+							<thead class="thead-inverse">
+								<tr>
+									<th></th>
+									<th>Nombre y apellidos</th>
+									<th>ver</th>
+									<th>eliminar</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="student: ${client.students}">
+									<td th:text="${student.id}"></td>
+									<td th:text="${student.name} + ' ' + ${student.surname}"></td>
+
+									<td><a class="btn btn-primary btn-xs"
+										th:href="@{/studentProfile/} + ${student.id}" th:text="'ver'"></a></td>
+
+									<td><a class="btn btn-danger btn-xs"
+										th:href="@{/deleteStudentOfClient/} + ${student.id}"
+										th:text="'eliminar'"
+										onclick="return confirm('¿Quiere eliminar el alumno?');"></a></td>
+								</tr>
+							</tbody>
+
+						</table>
+						<p>
+							<a th:href="@{/studentForm/} + ${client.id}" class="btn btn-success btn-xs"
+								th:text="'ALTA DE ALUMNO'"></a>
+						</p>
+					</div>
+				</div>
 
 			</div>
 
 		</div>
-	</div>
 
 	</div>
 

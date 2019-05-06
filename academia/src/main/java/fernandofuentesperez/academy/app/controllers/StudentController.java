@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import fernandofuentesperez.academy.app.models.entities.Student;
+import fernandofuentesperez.academy.app.models.services.ClientService;
 import fernandofuentesperez.academy.app.models.services.StudentService;
 import fernandofuentesperez.academy.app.models.services.UploadFileService;
 import fernandofuentesperez.academy.app.util.paginator.PageRender;
@@ -39,6 +40,9 @@ public class StudentController {
 
 	@Autowired
 	private StudentService studentService;
+	
+	@Autowired
+	private ClientService clientService;
 	
 	@Autowired
 	private UploadFileService uploadFileService;
@@ -91,11 +95,14 @@ public class StudentController {
 
 	}
 
+	
 	// Envía un alumno sin datos al formulario
-	@RequestMapping(value = "/studentForm", method = RequestMethod.GET)
-	public String createStudent(Map<String, Object> model) {
+	@RequestMapping(value = "/studentForm/{id}", method = RequestMethod.GET)
+	public String createStudent(@PathVariable(value = "id") Long id, Map<String, Object> model) {
 
 		Student student = new Student();
+		
+		student.setClient(clientService.findOne(id));
 		student.setPhoto(""); //Campo photo no puede ser null.
 
 		model.put("student", student);
@@ -103,6 +110,8 @@ public class StudentController {
 
 		return "studentForm";
 	}
+	
+	
 
 	// Guarda un alumno en el sistema
 	@RequestMapping(value = "/studentForm", method = RequestMethod.POST)
@@ -142,7 +151,7 @@ public class StudentController {
 		studentService.save(student);
 		status.setComplete(); // Elimina el objeto alumno de la sesión
 		flash.addFlashAttribute("success", msflash);
-		return "redirect:studentList";
+		return "redirect:clientProfile/"+student.getClient().getId();
 	}
 
 	// Busca los datos del alumno y los envía al formulario
@@ -181,6 +190,24 @@ public class StudentController {
 
 		}
 		return "redirect:/studentList";
+	}
+	
+	@RequestMapping(value = "/deleteStudentOfClient/{idStudent}")
+	public String deleteStudentOfClient(@PathVariable(value = "idStudent") Long idStudent, RedirectAttributes flash) {
+		Student student = null;
+		if (idStudent > 0) {
+			student = studentService.findOne(idStudent);
+
+			studentService.delete(idStudent);
+			flash.addFlashAttribute("success", "Alumno eliminado con éxito.");
+
+			if (uploadFileService.delete(student.getPhoto())) {
+				flash.addFlashAttribute("info", "Foto " + student.getPhoto() + " eliminada con éxito");
+			}
+			return "redirect:/clientProfile/"+student.getClient().getId();
+
+		}
+		return "redirect:/clientList";
 	}
 
 }
