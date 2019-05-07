@@ -1,13 +1,22 @@
 package fernandofuentesperez.academy.app.controllers;
 
+import java.util.Collection;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,14 +40,47 @@ public class ClientController {
 	@Autowired
 	private ClientService clientService;
 
-	// Envía los datos de un alumno al profile.html
+	
 	@GetMapping(value = "/clientProfile/{id}")
-	public String seeClient(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+	public String seeClient(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash, HttpServletRequest request) {
 
 		Client client = clientService.findOne(id);
+		
+		if(!hasRole("ROLE_ADMIN")) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			
+			Client userNameClient = clientService.findOneByUserName(auth.getName());
+			
+			if (userNameClient != client) {
+				return "redirect:/error_403";
+			}
+		}
+		/* OTRA FORMA DE COMPROBAR EL ROL DEL USUARIO
+		SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "ROLE_");
+		if(securityContext.isUserInRole("ADMIN")) {} 
+		*/
+		
 		if (client == null) {
 			flash.addFlashAttribute("error", "El cliente no existe en la base de datos");
-			return "redirect:/clientList";
+			return "redirect:/home";
+		}
+
+		model.put("client", client);
+		model.put("titulo", "Cliente :  " + client.getName() + " " + client.getSurname());
+		return "clientProfile";
+	}
+	
+	
+	@GetMapping(value = "/clientProfile")
+	public String countClient(Map<String, Object> model, RedirectAttributes flash) {
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		
+		Client client = clientService.findOneByUserName(auth.getName());
+		
+		if (client == null) {
+			flash.addFlashAttribute("error", "El cliente no existe en la base de datos");
+			return "redirect:/home";
 		}
 
 		model.put("client", client);
@@ -46,7 +88,7 @@ public class ClientController {
 		return "clientProfile";
 	}
 
-	// Envía un Page con 4 clientes usando PageRequest
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/clientList", method = RequestMethod.GET)
 	public String listClient(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
 
@@ -62,19 +104,20 @@ public class ClientController {
 
 	}
 
-	// Envía un alumno sin datos al formulario
+	
 	@RequestMapping(value = "/clientForm", method = RequestMethod.GET)
 	public String createClient(Map<String, Object> model) {
 
 		Client client = new Client();
-
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		client.setUserName(auth.getName());
 		model.put("client", client);
 		model.put("titulo", "Crear Cliente");
 
 		return "clientForm";
 	}
 
-	// Guarda un alumno en el sistema
+	
 	@RequestMapping(value = "/clientForm", method = RequestMethod.POST)
 	public String saveClient(@Valid Client client, BindingResult result, Model model,
 			RedirectAttributes flash, SessionStatus status) {
@@ -91,7 +134,7 @@ public class ClientController {
 		return "redirect:clientList";
 	}
 
-	// Busca los datos del alumno y los envía al formulario
+	
 	@RequestMapping(value = "/clientForm/{id}")
 	public String editClient(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 		Client client = null;
@@ -113,6 +156,7 @@ public class ClientController {
 		return "clientForm";
 	}
 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/deleteClient/{id}")
 	public String deleteClient(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		if (id > 0) {
@@ -124,8 +168,23 @@ public class ClientController {
 		return "redirect:/clientList";
 	}
 	
-	
-	
-	
+	private boolean hasRole(String role) {
+		
+		SecurityContext context = SecurityContextHolder.getContext();
+		
+		if(context == null) {
+			return false;
+		}
+		
+		Authentication auth = context.getAuthentication();
+		
+		if(auth == null) {
+			return false;
+		}
+		
+		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+		
+		return authorities.contains(new SimpleGrantedAuthority(role));
+	}
 
 }

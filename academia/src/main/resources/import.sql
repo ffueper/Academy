@@ -2,6 +2,7 @@
 INSERT INTO clients (id, name, surname, email, phone_number, created) VALUES(1, 'Andres', 'Guzman', 'profesor@bolsadeideas.com', '954324512', '2017-08-01');
 INSERT INTO clients (id, name, surname, email, phone_number, created) VALUES(2, 'John', 'Doe', 'john.doe@gmail.com', '954324512', '2017-08-02');
 INSERT INTO clients (id, name, surname, email, phone_number, created) VALUES(3, 'Linus', 'Torvalds', 'linus.torvalds@gmail.com', '954324512', '2017-08-03');
+INSERT INTO clients (id, name, surname, email, phone_number, user_name, created) VALUES(4, 'Fernando', 'Fuentes', 'linus.torvalds@gmail.com', '954324512', 'fer','2017-08-03');
 
 /* Populate tables */
 INSERT INTO students (name, surname, email, date_birth, created, photo, client_id) VALUES('Fernando', 'Fuentes Perez', 'fernandofuentesperez@gmail.com', '1988-08-23', '2019-04-23', '', 1);

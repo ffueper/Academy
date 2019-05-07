@@ -14,14 +14,19 @@
 
 				<ul class="list-group">
 					<li class="list-group-item shadow p-3 mb-3"><b>Email : </b>
-					<div th:text="${client.email}"></div></li>
+						<div th:text="${client.email}"></div></li>
 					<li class="list-group-item shadow p-3 mb-3"><b>Tel&eacute;fono
 							: </b>
-					<div th:text="${client.phoneNumber}"></div></li>
+						<div th:text="${client.phoneNumber}"></div></li>
 					<li class="list-group-item shadow p-3 mb-3"><b>Fecha de
 							registro : </b>
-					<div th:text="${#dates.format(client.created, 'dd/MM/yyyy')}"></div></li>
+						<div th:text="${#dates.format(client.created, 'dd/MM/yyyy')}"></div></li>
 				</ul>
+				
+				<p>
+					<a th:href="@{/invoice/invoiceList/} + ${client.id}"
+						class="btn btn-secondary btn-xs" th:text="'VER FACTURAS DEL CLIENTE'"></a>
+				</p>
 				<br>
 				<div th:if="${#lists.isEmpty(client.students)}"
 					class="alert alert-info my-4"
@@ -32,17 +37,17 @@
 
 					<div class="card-header" th:text="'Alumnos asociados: '"></div>
 					<div class="card-body">
-					
+
 						<table th:if="${not #lists.isEmpty(client.students)}"
 							class="table table-bordered table-white py-4 px-4">
 							<tbody>
 								<tr th:each="student: ${client.students}">
-									<td class="col-sm-9">
-									<a class="list-group-item list-group-item-action text-dark"
-									th:href="@{/studentProfile/} + ${student.id}"
-									th:text="${student.name} + ' ' + ${student.surname}"></a></td>
-									<td class="col-sm-3">
-										<a class=" float-right list-group-item list-group-item-action bg-danger text-white"
+									<td class="col-sm-9"><a
+										class="list-group-item list-group-item-action text-dark"
+										th:href="@{/studentProfile/} + ${student.id}"
+										th:text="${student.name} + ' ' + ${student.surname}"></a></td>
+									<td class="col-sm-3"><a
+										class=" float-right list-group-item list-group-item-action bg-danger text-white"
 										th:href="@{/deleteStudentOfClient/} + ${student.id}"
 										th:text="'Eliminar'"
 										onclick="return confirm('¿Quiere eliminar el alumno?');"></a></td>
@@ -54,10 +59,7 @@
 							<a th:href="@{/studentForm/} + ${client.id}"
 								class="btn btn-success btn-xs" th:text="'ALTA DE ALUMNO'"></a>
 						</p>
-						<p>
-							<a th:href="@{/invoiceList/} + ${client.id}"
-								class="btn btn-primary btn-xs" th:text="'VER FACTURAS'"></a>
-						</p>
+
 					</div>
 				</div>
 

@@ -29,16 +29,24 @@ public class Client implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
 	@NotEmpty
 	private String name;
+	
 	@NotEmpty
 	private String surname;
+	
 	@NotEmpty
 	@Email
 	private String email;
+	
 	@NotEmpty
 	@Column(name = "phone_number")
 	private String phoneNumber;
+	
+	@NotEmpty
+	@Column(name = "user_name")
+	private String userName;
 	
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -107,6 +115,14 @@ public class Client implements Serializable {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public Date getCreated() {

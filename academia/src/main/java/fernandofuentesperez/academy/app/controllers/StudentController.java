@@ -1,6 +1,5 @@
 package fernandofuentesperez.academy.app.controllers;
 
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
@@ -9,12 +8,12 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,10 +39,10 @@ public class StudentController {
 
 	@Autowired
 	private StudentService studentService;
-	
+
 	@Autowired
 	private ClientService clientService;
-	
+
 	@Autowired
 	private UploadFileService uploadFileService;
 
@@ -63,8 +62,8 @@ public class StudentController {
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
 				.body(resource);
 	}
+	
 
-	// Envía los datos de un alumno al profile.html
 	@GetMapping(value = "/studentProfile/{id}")
 	public String seeStudent(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 
@@ -79,7 +78,8 @@ public class StudentController {
 		return "studentProfile";
 	}
 
-	// Envía un Page con 5 alumnos usando PageRequest
+	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/studentList", method = RequestMethod.GET)
 	public String listStudent(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
 
@@ -96,24 +96,21 @@ public class StudentController {
 	}
 
 	
-	// Envía un alumno sin datos al formulario
 	@RequestMapping(value = "/studentForm/{id}", method = RequestMethod.GET)
 	public String createStudent(@PathVariable(value = "id") Long id, Map<String, Object> model) {
 
 		Student student = new Student();
-		
+
 		student.setClient(clientService.findOne(id));
-		student.setPhoto(""); //Campo photo no puede ser null.
+		student.setPhoto(""); // Campo photo no puede ser null.
 
 		model.put("student", student);
 		model.put("titulo", "Crear Alumno");
 
 		return "studentForm";
 	}
-	
-	
 
-	// Guarda un alumno en el sistema
+	
 	@RequestMapping(value = "/studentForm", method = RequestMethod.POST)
 	public String saveStudent(@Valid Student student, BindingResult result, Model model,
 			@RequestParam("file") MultipartFile photo, RedirectAttributes flash, SessionStatus status) {
@@ -145,18 +142,19 @@ public class StudentController {
 		}
 
 		// Si crea un alumno con foto le meto cadena vacía para que no de error
-		//alumno.setPhoto("");
+		// alumno.setPhoto("");
 
 		String msflash = (student.getId() != null) ? "Alumno editado con éxito." : "Alumno creado con éxito.";
 		studentService.save(student);
 		status.setComplete(); // Elimina el objeto alumno de la sesión
 		flash.addFlashAttribute("success", msflash);
-		return "redirect:clientProfile/"+student.getClient().getId();
+		return "redirect:clientProfile/" + student.getClient().getId();
 	}
 
-	// Busca los datos del alumno y los envía al formulario
+	
 	@RequestMapping(value = "/studentForm/{id}")
-	public String editStudent(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+	public String editStudent(@PathVariable(value = "id") Long id, Map<String, Object> model,
+			RedirectAttributes flash) {
 		Student student = null;
 
 		if (id > 0) {
@@ -176,6 +174,7 @@ public class StudentController {
 		return "studentForm";
 	}
 
+	
 	@RequestMapping(value = "/deleteStudent/{id}")
 	public String deleteStudent(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		if (id > 0) {
@@ -191,6 +190,7 @@ public class StudentController {
 		}
 		return "redirect:/studentList";
 	}
+
 	
 	@RequestMapping(value = "/deleteStudentOfClient/{idStudent}")
 	public String deleteStudentOfClient(@PathVariable(value = "idStudent") Long idStudent, RedirectAttributes flash) {
@@ -204,10 +204,30 @@ public class StudentController {
 			if (uploadFileService.delete(student.getPhoto())) {
 				flash.addFlashAttribute("info", "Foto " + student.getPhoto() + " eliminada con éxito");
 			}
-			return "redirect:/clientProfile/"+student.getClient().getId();
+			return "redirect:/clientProfile/" + student.getClient().getId();
 
 		}
 		return "redirect:/clientList";
 	}
+	
+
+	/*private boolean hasRole(String role) {
+
+		SecurityContext context = SecurityContextHolder.getContext();
+
+		if (context == null) {
+			return false;
+		}
+
+		Authentication auth = context.getAuthentication();
+
+		if (auth == null) {
+			return false;
+		}
+
+		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+
+		return authorities.contains(new SimpleGrantedAuthority(role));
+	}*/
 
 }

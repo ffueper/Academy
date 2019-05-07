@@ -6,4 +6,6 @@ import fernandofuentesperez.academy.app.models.entities.Client;
 
 public interface ClientDAO extends PagingAndSortingRepository<Client, Long>{
 
+	Client findOneByUserName(String userName);
+	
 }

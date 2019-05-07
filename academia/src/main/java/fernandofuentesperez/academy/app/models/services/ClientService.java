@@ -19,4 +19,6 @@ public interface ClientService {
 	
 	public void delete(Long id);
 	
+	public Client findOneByUserName(String userName);
+	
 }

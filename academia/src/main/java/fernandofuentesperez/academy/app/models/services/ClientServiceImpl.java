@@ -47,5 +47,11 @@ public class ClientServiceImpl implements ClientService {
 	public void delete(Long id) {
 		clientDao.deleteById(id);
 	}
+	
+	@Override
+	@Transactional
+	public Client findOneByUserName(String userName) {
+		return clientDao.findOneByUserName(userName);
+	}
 
 }
