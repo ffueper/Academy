@@ -2,7 +2,7 @@
 INSERT INTO clients (id, name, surname, email, phone_number, created) VALUES(1, 'Andres', 'Guzman', 'profesor@bolsadeideas.com', '954324512', '2017-08-01');
 INSERT INTO clients (id, name, surname, email, phone_number, created) VALUES(2, 'John', 'Doe', 'john.doe@gmail.com', '954324512', '2017-08-02');
 INSERT INTO clients (id, name, surname, email, phone_number, created) VALUES(3, 'Linus', 'Torvalds', 'linus.torvalds@gmail.com', '954324512', '2017-08-03');
-INSERT INTO clients (id, name, surname, email, phone_number, user_name, created) VALUES(4, 'Fernando', 'Fuentes', 'linus.torvalds@gmail.com', '954324512', 'fer','2017-08-03');
+INSERT INTO clients (id, name, surname, email, phone_number, user_name, created) VALUES(4, 'Fernando', 'Fuentes', 'linus.torvalds@gmail.com', '954324512', 'ffueper','2017-08-03');
 
 /* Populate tables */
 INSERT INTO students (name, surname, email, date_birth, created, photo, client_id) VALUES('Fernando', 'Fuentes Perez', 'fernandofuentesperez@gmail.com', '1988-08-23', '2019-04-23', '', 1);
@@ -29,3 +29,11 @@ INSERT INTO products (name, price, created) VALUES('Sony Notebook Z110', 37990, 
 INSERT INTO products (name, price, created) VALUES('Hewlett Packard Multifuncional F2280', 69990, NOW());
 INSERT INTO products (name, price, created) VALUES('Bianchi Bicicleta Aro 26', 69990, NOW());
 INSERT INTO products (name, price, created) VALUES('Mica Comoda 5 Cajones', 299990, NOW());
+
+/* Creamos algunos usuarios con sus roles */
+INSERT INTO `users` (username, password, enabled) VALUES ('ffueper','$2a$10$PbaQKN9eLebZkTmN4Ou0Ve/j93SAF4qcA1BCeO638vzK/NHA2WUby',1);
+INSERT INTO `users` (username, password, enabled) VALUES ('admin','$2a$10$89JSnK4Txwu4Qn3HHXWe7OiUddviSajCCiQH4Usuxq3VH4eO4I8Ei',1);
+
+INSERT INTO `authorities` (user_id, authority) VALUES (1,'ROLE_USER');
+INSERT INTO `authorities` (user_id, authority) VALUES (2,'ROLE_ADMIN');
+INSERT INTO `authorities` (user_id, authority) VALUES (2,'ROLE_USER');

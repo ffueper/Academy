@@ -1,4 +1,4 @@
-package fernandofuentesperez.academy.app.models.repository;
+package fernandofuentesperez.academy.app.models.repositories;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fernandofuentesperez.academy.app.models.entities.Student;
-import fernandofuentesperez.academy.app.models.repository.StudentDAO;
+import fernandofuentesperez.academy.app.models.repositories.StudentDAO;
 
 //CLASE SERVICE COMO UNICO PUNTO DE ACCESO A DIFERENTES CLASES DAO
 

@@ -6,12 +6,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.User.UserBuilder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import fernandofuentesperez.academy.app.auth.handler.LoginSuccessHandler;
+import fernandofuentesperez.academy.app.models.services.JpaUserDetailsService;
+
 
 @EnableGlobalMethodSecurity(securedEnabled=true, prePostEnabled=true)
 @Configuration
@@ -19,6 +18,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Autowired
 	private LoginSuccessHandler successHandler;
+	
+	@Autowired
+	private JpaUserDetailsService userDetailsService;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -40,15 +46,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	}
 
 	@Autowired
-	public void configurerGlobal(AuthenticationManagerBuilder build) throws Exception
-	{
+	public void configurerGlobal(AuthenticationManagerBuilder build) throws Exception {
 		
-		PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-		UserBuilder users = User.builder().passwordEncoder(encoder::encode);
+		build.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
 		
-		build.inMemoryAuthentication()
-		.withUser(users.username("admin").password("12345").roles("ADMIN"))
-		.withUser(users.username("fer").password("12345").roles("USER"));
 	}
+	
+	
 	
 }
