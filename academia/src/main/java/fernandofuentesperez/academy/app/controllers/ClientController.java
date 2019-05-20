@@ -79,8 +79,8 @@ public class ClientController {
 		Client client = clientService.findOneByUserName(auth.getName());
 		
 		if (client == null) {
-			flash.addFlashAttribute("error", "El cliente no existe en la base de datos");
-			return "redirect:/home";
+			flash.addFlashAttribute("error", "No existen datos de cliente todavía.");
+			return "redirect:/clientForm";
 		}
 
 		model.put("client", client);
@@ -130,7 +130,13 @@ public class ClientController {
 		String msflash = (client.getId() != null) ? "Cliente editado con éxito." : "Cliente creado con éxito.";
 		clientService.save(client);
 		status.setComplete(); // Elimina el objeto cliente de la sesión
+		
+		if(client.getUserName()!="admin") {
+			return "redirect:clientProfile";
+		}
+		
 		flash.addFlashAttribute("success", msflash);
+		
 		return "redirect:clientList";
 	}
 

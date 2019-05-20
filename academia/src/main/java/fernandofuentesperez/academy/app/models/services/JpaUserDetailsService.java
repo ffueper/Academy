@@ -14,8 +14,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fernandofuentesperez.academy.app.models.entities.Client;
 import fernandofuentesperez.academy.app.models.entities.Role;
 import fernandofuentesperez.academy.app.models.entities.User;
+import fernandofuentesperez.academy.app.models.repositories.RoleDAO;
 import fernandofuentesperez.academy.app.models.repositories.UserDAO;
 
 @Service("jpaUserDetailsService")
@@ -23,6 +25,9 @@ public class JpaUserDetailsService implements UserDetailsService {
 
 	@Autowired
 	private UserDAO userDAO;
+	
+	@Autowired
+	private RoleDAO roleDAO;
 	
 	private Logger logger = LoggerFactory.getLogger(JpaUserDetailsService.class);
 	
@@ -52,6 +57,23 @@ public class JpaUserDetailsService implements UserDetailsService {
 		return new org.springframework.security.core.userdetails
 				.User(user.getUserName(), user.getPassword(), user.getEnabled(), 
 						true, true, true, authorities);
+	}
+	
+	
+	@Transactional
+	public void save(User user) {
+		if(user==null) {
+			logger.error("Error registro de usuario: El usuario es nulo");
+		}
+		userDAO.save(user);
+	}
+	
+	@Transactional
+	public void save(Role role) {
+		if(role==null) {
+			logger.error("Error registro de rol: El rol es nulo");
+		}
+		roleDAO.save(role);
 	}
 
 }

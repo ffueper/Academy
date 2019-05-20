@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head">
+</head>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+		<div class="card bg-light">
+			<h4 class="card-header" th:text="${titulo}"></h4>
+
+			<div th:object="${user}" th:remove="tag">
+				<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger"
+					role="alert">
+					<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+				</ul>
+
+			</div>
+			<div class="container py-4">
+				<form th:action="@{/userRegister}" th:object="${user}" method="post">
+
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label">Usuario</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{userName}" class="form-control"
+								th:errorclass="'form-contra alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label">Contraseña</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{password}" class="form-control"
+								th:errorclass="'form-contra alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="col-sm-6">
+							<input type="submit" th:value="${boton}"
+								class="btn btn-secondary" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	</div>
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>
